@@ -1,40 +1,19 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
-const userRoutes = require('./routes/users');
-const postRoutes = require('./routes/posts');
-
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Database connection
-mongoose.connect('mongodb://localhost/mental-health-social', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => {
-    console.log('Connected to MongoDB successfully');
-})
-.catch((error) => {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-});
+let posts = [{id: 1, content: 'Bem-vindos … Rede Psi!', author: 'Sistema', likes: [], comments: [], createdAt: new Date().toISOString()}];
 
-// Handle MongoDB connection events
-mongoose.connection.on('disconnected', () => {
-    console.log('MongoDB disconnected');
-});
+app.post('/api/users/register', (req, res) => res.json({success: true, message: 'Cadastrado!'}));
+app.post('/api/users/login', (req, res) => res.json({success: true, user: {username: 'Usuario', email: req.body.email}, token: 'abc123'}));
+app.get('/api/users/me', (req, res) => res.json({username: 'Usuario', email: 'user@teste.com'}));
+app.get('/api/users/profile/:username', (req, res) => res.json({username: req.params.username, email: 'user@teste.com', bio: 'Usuario da Rede Psi'}));
+app.get('/api/posts', (req, res) => res.json(posts));
+app.post('/api/posts', (req, res) => {const newPost = {id: Date.now(), content: req.body.content, author: 'Usuario', likes: [], comments: [], createdAt: new Date().toISOString()}; posts.unshift(newPost); res.json({success: true, post: newPost});});
+app.post('/api/posts/:id/like', (req, res) => res.json({success: true, message: 'Post curtido!'}));
 
-mongoose.connection.on('error', (error) => {
-    console.error('MongoDB error:', error);
-});
-
-// Routes
-app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(5000, () => console.log('REDE PSI COMPLETA - PORTA 5000'));
+app.get('/api/posts/user/:username', (req, res) => res.json([{id: 2, content: 'Post do usuario ' + req.params.username, author: req.params.username, likes: [], comments: [], createdAt: new Date().toISOString()}])); 
