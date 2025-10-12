@@ -6,18 +6,11 @@ const fs = require('fs');
 const path = require('path');
 
 const buildPath = path.join(__dirname, 'build');
-const tmpPath = path.join(__dirname, 'tmp-gh-pages-build');
 
 if (!fs.existsSync(buildPath)) {
-  console.error('O build do React não foi encontrado. Execute "npm run build" antes de publicar.');
+  console.error('O build do React não foi encontrado em frontend/build. Execute "npm run build" dentro de frontend antes de publicar.');
   process.exit(1);
 }
-
-// Copia o build para uma pasta temporária
-if (fs.existsSync(tmpPath)) {
-  execSync(`rm -rf ${tmpPath}`);
-}
-execSync(`cp -r ${buildPath} ${tmpPath}`);
 
 try {
   execSync('git checkout gh-pages', { stdio: 'inherit' });
@@ -32,9 +25,8 @@ fs.readdirSync('.').forEach(file => {
   }
 });
 
-// Copia o conteúdo do build temporário para a raiz
-execSync(`cp -r ${tmpPath}/* .`);
-execSync(`rm -rf ${tmpPath}`);
+// Copia o conteúdo do build para a raiz
+execSync(`cp -r ${buildPath}/* .`, { stdio: 'inherit' });
 
 execSync('git add .', { stdio: 'inherit' });
 execSync('git commit -m "Deploy limpo do frontend para o GitHub Pages"', { stdio: 'inherit' });
