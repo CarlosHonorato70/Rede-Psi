@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Rede-Psi/static/css/main.fc5d0c59.css",
-    "main.js": "/Rede-Psi/static/js/main.894cb738.js",
+    "main.js": "/Rede-Psi/static/js/main.857c9e1d.js",
     "index.html": "/Rede-Psi/index.html",
     "main.fc5d0c59.css.map": "/Rede-Psi/static/css/main.fc5d0c59.css.map",
-    "main.894cb738.js.map": "/Rede-Psi/static/js/main.894cb738.js.map"
+    "main.857c9e1d.js.map": "/Rede-Psi/static/js/main.857c9e1d.js.map"
   },
   "entrypoints": [
     "static/css/main.fc5d0c59.css",
-    "static/js/main.894cb738.js"
+    "static/js/main.857c9e1d.js"
   ]
 }
