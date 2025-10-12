@@ -18,10 +18,18 @@ try {
   execSync('git checkout --orphan gh-pages', { stdio: 'inherit' });
 }
 
-execSync('git rm -rf .', { stdio: 'inherit' });
+// Remove todos os arquivos exceto .git
+fs.readdirSync('.').forEach(file => {
+  if (file !== '.git') {
+    execSync(`rm -rf ${file}`);
+  }
+});
+
+// Copia o conteúdo do build para a raiz
 execSync('cp -r build/* .', { stdio: 'inherit' });
+
 execSync('git add .', { stdio: 'inherit' });
-execSync('git commit -m "Deploy do frontend para o GitHub Pages"', { stdio: 'inherit' });
+execSync('git commit -m "Deploy limpo do frontend para o GitHub Pages"', { stdio: 'inherit' });
 execSync('git push origin gh-pages --force', { stdio: 'inherit' });
 execSync('git checkout main', { stdio: 'inherit' });
 
