@@ -18,7 +18,7 @@ function Profile() {
 
     const fetchUserProfile = async () => {
         try {
-            const response = await fetch(`/api/users/profile/${username}`, {
+            const response = await fetch(`${API_BASE_URL}/api/users/profile/${username}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -38,7 +38,7 @@ function Profile() {
 
     const fetchUserPosts = async () => {
         try {
-            const response = await fetch(`/api/posts/user/${username}`, {
+            const response = await fetch(`${API_BASE_URL}/api/posts/user/${username}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
@@ -107,3 +107,5 @@ function Profile() {
 }
 
 export default Profile;
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';

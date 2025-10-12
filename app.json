@@ -1,0 +1,17 @@
+{
+  "name": "rede-psi-backend",
+  "description": "Backend da Rede Psi (Node.js/Express/MongoDB)",
+  "env": {
+    "MONGODB_URI": {
+      "description": "String de conexão do MongoDB Atlas",
+      "required": true
+    },
+    "JWT_SECRET": {
+      "description": "Chave secreta JWT",
+      "required": true
+    }
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

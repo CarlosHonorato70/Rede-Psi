@@ -6,13 +6,16 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    // URL base da API (Heroku ou local)
+    const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+
     useEffect(() => {
         // Verificar token armazenado e validar usuário
         const checkAuth = async () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await fetch('/api/users/me', {
+                    const response = await fetch(`${API_BASE_URL}/api/users/me`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -36,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await fetch('/api/users/login', {
+            const response = await fetch(`${API_BASE_URL}/api/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

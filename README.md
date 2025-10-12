@@ -1,55 +1,30 @@
-# Rede Psi
+# Backend - Rede Psi
 
-Mental Health Social Network - Uma rede social focada em saúde mental.
+API REST para a Rede Psi (Mental Health Social Network).
 
-## Estrutura do Projeto
+## Tecnologias
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT para autenticação
+- bcrypt para hash de senhas
 
-### Backend
-- **Localização**: `backend/`
-- **Tecnologias**: Node.js, Express, MongoDB
-- **Porta**: 5000
+## Estrutura
+- `server.js` - Arquivo principal do servidor
+- `models/` - Modelos do MongoDB (User, Post, Comment)
+- `routes/` - Rotas da API (users, posts)
 
-### Frontend
-- **Localização**: `frontend/`
-- **Tecnologias**: React, React Router
-- **Porta**: 3000 (desenvolvimento)
+## Endpoints
+- `/api/users` - Gestão de usuários
+- `/api/posts` - Gestão de posts
 
 ## Como Executar
-
-### Instalação das Dependências
 ```bash
-npm run install:all
-```
-
-### Executar Backend
-```bash
-npm run start:backend
-# ou para desenvolvimento:
-npm run dev:backend
-```
-
-### Executar Frontend
-```bash
-npm run start:frontend
-```
-
-### Build do Frontend
-```bash
-npm run build:frontend
-```
-
-### Execução Individual
-
-#### Backend
-```bash
-cd backend
 npm install
 npm start
 ```
 
-#### Frontend
+Para desenvolvimento com auto-reload:
 ```bash
-cd frontend
-npm install
-npm start
+npm run dev
 ```

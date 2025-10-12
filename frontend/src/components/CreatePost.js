@@ -6,7 +6,7 @@ function CreatePost({ onPostCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/posts', {
+      const response = await fetch(`${API_BASE_URL}/api/posts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content })
@@ -26,7 +26,7 @@ function CreatePost({ onPostCreated }) {
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="O que vocˆ est  pensando?"
+          placeholder="O que vocï¿½ estï¿½ pensando?"
           style={{width: '100%', height: '100px', marginBottom: '10px'}}
         />
         <button type="submit" style={{padding: '10px 20px', backgroundColor: '#6a4c93', color: 'white', border: 'none'}}>
@@ -38,3 +38,5 @@ function CreatePost({ onPostCreated }) {
 }
 
 export default CreatePost;
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';

@@ -1,73 +1,42 @@
+
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const cors = require('cors');
+const userRoutes = require('./routes/users');
+const postRoutes = require('./routes/posts');
+
 const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-let users = [];
-let posts = [{id: 1, content: 'Bem-vindos … Rede Psi!', author: 'Sistema', likes: [], comments: [], createdAt: new Date().toISOString()}];
-let sessions = [];
-
-// CADASTRO
-app.post('/api/users/register', (req, res) => {
-    const user = {id: Date.now(), ...req.body};
-    users.push(user);
-    res.json({success: true, message: 'Usuario cadastrado com sucesso!'});
+// Database connection
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('Connected to MongoDB Atlas successfully');
+})
+.catch((error) => {
+  console.error('MongoDB connection error:', error);
+  process.exit(1);
 });
 
-// LOGIN
-app.post('/api/users/login', (req, res) => {
-    res.json({success: true, user: {username: req.body.email, email: req.body.email}, token: 'abc123'});
+// Handle MongoDB connection events
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
 });
 
-// USUARIO LOGADO
-app.get('/api/users/me', (req, res) => {
-    res.json({username: 'Usuario', email: 'user@teste.com'});
+mongoose.connection.on('error', (error) => {
+  console.error('MongoDB error:', error);
 });
 
-// PERFIL
-app.get('/api/users/profile/:username', (req, res) => {
-    res.json({username: req.params.username, email: 'user@teste.com', bio: 'Usuario da Rede Psi'});
-});
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
 
-// POSTS - LISTAR
-app.get('/api/posts', (req, res) => {
-    res.json(posts);
-});
-
-// POSTS - CRIAR
-app.post('/api/posts', (req, res) => {
-    const newPost = {id: Date.now(), content: req.body.content, author: 'Usuario', likes: [], comments: [], createdAt: new Date().toISOString()};
-    posts.unshift(newPost);
-    res.json({success: true, post: newPost});
-});
-
-// POSTS DO USUARIO
-app.get('/api/posts/user/:username', (req, res) => {
-    res.json(posts.filter(p => p.author === req.params.username));
-});
-
-// CURTIR POST
-app.post('/api/posts/:id/like', (req, res) => {
-    res.json({success: true, message: 'Post curtido!'});
-});
-
-// SESSOES - LISTAR
-app.get('/api/therapy/sessions', (req, res) => {
-    res.json(sessions);
-});
-
-// SESSOES - AGENDAR
-app.post('/api/therapy/sessions', (req, res) => {
-    const session = {id: Date.now(), ...req.body, status: 'agendada'};
-    sessions.push(session);
-    res.json({success: true, session: session});
-});
-
-// GRUPOS
-app.get('/api/groups', (req, res) => {
-    res.json([{id: 1, name: 'Ansiedade', description: 'Grupo de apoio para ansiedade', members: 10}]);
-});
-
-app.listen(5000, () => console.log('REDE PSI 100% FUNCIONAL - PORTA 5000'));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
