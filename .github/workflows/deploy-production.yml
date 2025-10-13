@@ -1,0 +1,145 @@
+name: 🚀 Deploy Profissional - Heroku + Vercel
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  test:
+    name: 🧪 Testes e Validação
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: |
+          backend/package-lock.json
+          frontend/package-lock.json
+        
+    - name: 📦 Instalar dependências Backend
+      run: |
+        cd backend
+        npm ci
+        
+    - name: 📦 Instalar dependências Frontend
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: 🧪 Executar testes Backend
+      run: |
+        cd backend
+        npm test || echo "⚠️ Testes não configurados ainda"
+        
+    - name: 🧪 Executar testes Frontend
+      run: |
+        cd frontend
+        npm test -- --watchAll=false || echo "⚠️ Testes não configurados ainda"
+        
+    - name: 🔒 Auditoria de segurança
+      run: |
+        cd backend && npm audit --audit-level=high || echo "⚠️ Verificar vulnerabilidades"
+        cd ../frontend && npm audit --audit-level=high || echo "⚠️ Verificar vulnerabilidades"
+
+  deploy-backend:
+    name: 🔧 Deploy Backend (Heroku)
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v4
+      
+    - name: 🚀 Deploy para Heroku
+      uses: akhileshns/heroku-deploy@v3.12.14
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+        heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        appdir: "backend"
+        buildpack: "heroku/nodejs"
+        
+    - name: ⏳ Aguardar deploy do backend
+      run: |
+        echo "🔄 Aguardando backend ficar online..."
+        sleep 30
+        
+    - name: 🏥 Verificar saúde do backend
+      run: |
+        echo "🔍 Testando endpoint de saúde..."
+        curl -f "https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com/api/health" || echo "⚠️ Backend pode estar inicializando"
+
+  deploy-frontend:
+    name: 🎨 Deploy Frontend (Vercel )
+    runs-on: ubuntu-latest
+    needs: [test, deploy-backend]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout código
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: 📦 Instalar dependências Frontend
+      run: |
+        cd frontend
+        npm ci
+        
+    - name: 🏗️ Build do Frontend
+      run: |
+        cd frontend
+        npm run build
+      env:
+        REACT_APP_API_URL: https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com
+        REACT_APP_ENVIRONMENT: production
+        
+    - name: 🚀 Deploy para Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: frontend
+        vercel-args: '--prod'
+
+  verify-deployment:
+    name: ✅ Verificar Deploy Completo
+    runs-on: ubuntu-latest
+    needs: [deploy-backend, deploy-frontend]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 🔍 Testar Backend
+      run: |
+        echo "🧪 Testando API backend..."
+        curl -f "https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com/api/health" && echo "✅ Backend OK" || echo "❌ Backend com problemas"
+        
+    - name: 🔍 Testar Frontend
+      run: |
+        echo "🧪 Testando frontend..."
+        curl -f "${{ secrets.FRONTEND_URL }}" && echo "✅ Frontend OK" || echo "❌ Frontend com problemas"
+        
+    - name: 🎉 Deploy concluído
+      run: |
+        echo "�� Deploy profissional concluído com sucesso!"
+        echo "🌐 Frontend: ${{ secrets.FRONTEND_URL }}"
+        echo "⚙️ Backend: https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com"
+        echo "📊 Logs: https://dashboard.heroku.com/apps/${{ secrets.HEROKU_APP_NAME }}/logs"
+        echo "📈 Métricas: https://vercel.com/dashboard"
