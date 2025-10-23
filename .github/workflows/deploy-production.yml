@@ -25,12 +25,11 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
         cache-dependency-path: |
-          backend/package-lock.json
+          package-lock.json
           frontend/package-lock.json
         
     - name: 📦 Instalar dependências Backend
       run: |
-        cd backend
         npm ci
         
     - name: 📦 Instalar dependências Frontend
@@ -40,7 +39,6 @@ jobs:
         
     - name: 🧪 Executar testes Backend
       run: |
-        cd backend
         npm test || echo "⚠️ Testes não configurados ainda"
         
     - name: 🧪 Executar testes Frontend
@@ -50,8 +48,8 @@ jobs:
         
     - name: 🔒 Auditoria de segurança
       run: |
-        cd backend && npm audit --audit-level=high || echo "⚠️ Verificar vulnerabilidades"
-        cd ../frontend && npm audit --audit-level=high || echo "⚠️ Verificar vulnerabilidades"
+        npm audit --audit-level=high || echo "⚠️ Verificar vulnerabilidades"
+        cd frontend && npm audit --audit-level=high || echo "⚠️ Verificar vulnerabilidades"
 
   deploy-backend:
     name: 🔧 Deploy Backend (Heroku)
@@ -69,7 +67,6 @@ jobs:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
         heroku_email: ${{ secrets.HEROKU_EMAIL }}
-        appdir: "backend"
         buildpack: "heroku/nodejs"
         
     - name: ⏳ Aguardar deploy do backend
