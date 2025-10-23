@@ -12,6 +12,10 @@
 - npm (geralmente vem com Node.js)
 - MongoDB Atlas (gratuito) ou MongoDB local (opcional)
 
+## ⚡ Início Rápido
+
+Quer começar imediatamente? Veja o [**QUICKSTART.md**](QUICKSTART.md) para ter a aplicação rodando em 2 minutos!
+
 ## 🔧 Instalação e Configuração
 
 ### 1. Clonar o Repositório
