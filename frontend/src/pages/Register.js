@@ -80,6 +80,9 @@ function Register() {
                             onChange={handleChange}
                             required
                             disabled={loading}
+                            autoCorrect="off"
+                            autoCapitalize="off"
+                            spellCheck="false"
                         />
                     </div>
                     <div className="form-group">
@@ -127,6 +130,9 @@ function Register() {
                             onChange={handleChange}
                             disabled={loading}
                             rows="3"
+                            spellCheck="false"
+                            autoCorrect="off"
+                            autoCapitalize="off"
                         />
                     </div>
                     <div className="form-group checkbox-group">
@@ -152,6 +158,8 @@ function Register() {
                                 onChange={handleChange}
                                 disabled={loading}
                                 placeholder="e.g., Cognitive Behavioral Therapy"
+                                spellCheck="false"
+                                autoCorrect="off"
                             />
                         </div>
                     )}
