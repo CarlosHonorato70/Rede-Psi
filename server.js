@@ -34,6 +34,29 @@ mongoose.connection.on('error', (error) => {
   console.error('MongoDB error:', error);
 });
 
+// Health check endpoints
+app.get('/', (req, res) => {
+  res.json({
+    status: 'running',
+    message: 'Rede Psi está rodando!',
+    version: '1.0.0',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/health', (req, res) => {
+  const healthStatus = {
+    status: 'running',
+    server: 'operational',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  };
+  
+  const statusCode = mongoose.connection.readyState === 1 ? 200 : 503;
+  res.status(statusCode).json(healthStatus);
+});
+
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);

@@ -15,6 +15,8 @@ API REST para a Rede Psi (Mental Health Social Network).
 - `routes/` - Rotas da API (users, posts)
 
 ## Endpoints
+- `/` - Health check root (retorna status do servidor)
+- `/health` - Health check detalhado (servidor e banco de dados)
 - `/api/users` - Gestão de usuários
 - `/api/posts` - Gestão de posts
 
