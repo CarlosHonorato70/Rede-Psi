@@ -35,6 +35,16 @@ mongoose.connection.on('error', (error) => {
 });
 
 // Routes
+app.get('/api/health', (req, res) => {
+  const healthcheck = {
+    uptime: process.uptime(),
+    message: 'OK',
+    timestamp: Date.now(),
+    mongoStatus: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  };
+  res.status(200).json(healthcheck);
+});
+
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
