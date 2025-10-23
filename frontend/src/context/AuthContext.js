@@ -2,12 +2,12 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
+// URL base da API (Heroku ou local)
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
-
-    // URL base da API (Heroku ou local)
-    const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
     useEffect(() => {
         // Verificar token armazenado e validar usuário

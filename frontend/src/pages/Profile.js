@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Post from '../components/Post';
 import { useAuth } from '../context/AuthContext';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
 function Profile() {
     const { username } = useParams();
@@ -11,12 +13,7 @@ function Profile() {
     const [error, setError] = useState(null);
     const { currentUser } = useAuth();
 
-    useEffect(() => {
-        fetchUserProfile();
-        fetchUserPosts();
-    }, [username]);
-
-    const fetchUserProfile = async () => {
+    const fetchUserProfile = useCallback(async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/users/profile/${username}`, {
                 headers: {
@@ -34,9 +31,9 @@ function Profile() {
             console.error('Error fetching user profile:', error);
             setError('Failed to load profile');
         }
-    };
+    }, [username]);
 
-    const fetchUserPosts = async () => {
+    const fetchUserPosts = useCallback(async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/posts/user/${username}`, {
                 headers: {
@@ -53,7 +50,12 @@ function Profile() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [username]);
+
+    useEffect(() => {
+        fetchUserProfile();
+        fetchUserPosts();
+    }, [fetchUserProfile, fetchUserPosts]);
 
     if (loading) {
         return <div className="loading">Loading profile...</div>;
@@ -107,5 +109,3 @@ function Profile() {
 }
 
 export default Profile;
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || '';
