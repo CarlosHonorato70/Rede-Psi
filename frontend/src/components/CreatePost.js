@@ -26,8 +26,11 @@ function CreatePost({ onPostCreated }) {
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="O que voc� est� pensando?"
+          placeholder="O que você está pensando?"
           style={{width: '100%', height: '100px', marginBottom: '10px'}}
+          spellCheck="false"
+          autoCorrect="off"
+          autoCapitalize="off"
         />
         <button type="submit" style={{padding: '10px 20px', backgroundColor: '#6a4c93', color: 'white', border: 'none'}}>
           Publicar
