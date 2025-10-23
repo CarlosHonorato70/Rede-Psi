@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import Post from '../components/Post';
 import { useAuth } from '../context/AuthContext';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+
 function Profile() {
     const { username } = useParams();
     const [user, setUser] = useState(null);
@@ -12,48 +14,48 @@ function Profile() {
     const { currentUser } = useAuth();
 
     useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/profile/${username}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    setUser(userData);
+                } else {
+                    setError('User not found');
+                }
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                setError('Failed to load profile');
+            }
+        };
+
+        const fetchUserPosts = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/posts/user/${username}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const userPosts = await response.json();
+                    setPosts(userPosts);
+                }
+            } catch (error) {
+                console.error('Error fetching user posts:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
         fetchUserProfile();
         fetchUserPosts();
     }, [username]);
-
-    const fetchUserProfile = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/users/profile/${username}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            
-            if (response.ok) {
-                const userData = await response.json();
-                setUser(userData);
-            } else {
-                setError('User not found');
-            }
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-            setError('Failed to load profile');
-        }
-    };
-
-    const fetchUserPosts = async () => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/posts/user/${username}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            
-            if (response.ok) {
-                const userPosts = await response.json();
-                setPosts(userPosts);
-            }
-        } catch (error) {
-            console.error('Error fetching user posts:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     if (loading) {
         return <div className="loading">Loading profile...</div>;
@@ -107,5 +109,3 @@ function Profile() {
 }
 
 export default Profile;
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || '';

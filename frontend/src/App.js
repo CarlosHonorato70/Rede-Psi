@@ -11,7 +11,7 @@ import './styles/main.css';
 function App() {
     return (
         <AuthProvider>
-            <Router>
+            <Router basename={process.env.PUBLIC_URL}>
                 <div className="app">
                     <Navbar />
                     <Switch>

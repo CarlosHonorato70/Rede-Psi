@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         };
 
         checkAuth();
-    }, []);
+    }, [API_BASE_URL]);
 
     const login = async (email, password) => {
         try {
