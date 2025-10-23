@@ -49,6 +49,8 @@ PORT=5000
 
 ### Opção 1: Servidor Mock (Desenvolvimento Rápido - Recomendado para Teste)
 
+⚠️ **Apenas para desenvolvimento/teste** - Não use em produção
+
 Use o servidor mock com banco de dados em memória (não requer MongoDB):
 
 ```bash
@@ -60,6 +62,8 @@ npm run frontend
 ```
 
 Acesse: `http://localhost:3000`
+
+**Nota de Segurança:** O servidor mock não implementa rate limiting ou outras medidas de segurança necessárias para produção. Use `npm start` com MongoDB para ambientes de produção.
 
 ### Opção 2: Com MongoDB (Produção)
 

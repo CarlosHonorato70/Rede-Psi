@@ -147,6 +147,23 @@ Rede-Psi/
 
 Para instruções de deploy no Heroku, veja [README_DEPLOY_HEROKU.md](README_DEPLOY_HEROKU.md)
 
+## Segurança
+
+### Para Desenvolvimento (Mock Server)
+O servidor mock (`npm run mock`) é apenas para desenvolvimento e testes locais:
+- ⚠️ Não implementa rate limiting
+- ⚠️ Não persiste dados (memória volátil)
+- ⚠️ Validação simplificada
+
+### Para Produção
+Ao usar em produção (`npm start`):
+- ✅ Configure MongoDB Atlas ou instância MongoDB segura
+- ✅ Use HTTPS/TLS
+- ✅ Implemente rate limiting (recomendado: express-rate-limit)
+- ✅ Configure variáveis de ambiente seguras
+- ✅ Use JWT_SECRET forte e único
+- ✅ Implemente monitoramento e logs
+
 ## Suporte
 
 Para mais informações, consulte a documentação do projeto ou abra uma issue no GitHub.

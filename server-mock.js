@@ -1,3 +1,24 @@
+/**
+ * MOCK SERVER - DEVELOPMENT ONLY
+ * 
+ * ⚠️ WARNING: This server is for development and testing purposes only.
+ * DO NOT use this in production environments.
+ * 
+ * Security Considerations:
+ * - No rate limiting implemented
+ * - Uses in-memory storage (data not persisted)
+ * - Simplified authentication
+ * - No input validation beyond basic checks
+ * 
+ * For production, use server.js with a proper MongoDB instance and
+ * implement proper security measures including:
+ * - Rate limiting (express-rate-limit)
+ * - Input validation and sanitization
+ * - Request size limits
+ * - HTTPS/TLS
+ * - Production-grade authentication
+ */
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
