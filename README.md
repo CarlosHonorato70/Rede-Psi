@@ -78,14 +78,21 @@ npm run build
 npm run deploy
 ```
 
-A aplicação estará disponível em: `https://carloshonorato70.github.io/Rede-Psi`
+A aplicação estará disponível em: `https://[seu-usuario].github.io/Rede-Psi`
 
 ### Configuração do GitHub Pages
 
-O projeto utiliza:
-- Redirecionamento SPA através de `404.html` para suportar React Router
-- `basename` configurado no Router para suportar subdiretório do GitHub Pages
-- Scripts de redirecionamento para preservar rotas durante navegação
+O projeto utiliza uma solução para suportar React Router em GitHub Pages:
+
+1. **404.html Redirect**: Quando uma rota é acessada diretamente (ex: `/Rede-Psi/login`), o GitHub Pages não encontra o arquivo e serve o `404.html`
+2. **Path Preservation**: O `404.html` redireciona para `index.html` preservando o caminho original como parâmetro de query
+3. **History Restoration**: Um script no `index.html` restaura a URL original usando `window.history.replaceState`
+4. **Router Basename**: O React Router está configurado com `basename={process.env.PUBLIC_URL}` para funcionar corretamente no subdiretório
+
+Esta solução permite:
+- Navegação direta para qualquer rota
+- Refresh da página em qualquer rota
+- Funcionamento correto de todos os links internos
 
 ## 📝 Variáveis de Ambiente
 
